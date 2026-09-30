@@ -4,11 +4,12 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>wald</Name>
     <RootNamespace>wald</RootNamespace>
-    <InterpreterId>{6b0385fe-25a6-449b-ae19-2b7ac70506af}</InterpreterId>
+    <InterpreterId>
+    </InterpreterId>
     <PythonRunWebServerCommandArguments>runserver --settings $(DjangoSettingsModule) %SERVER_PORT% $(CommandLineArguments)</PythonRunWebServerCommandArguments>
     <WebBrowserPort>6506</WebBrowserPort>
     <DebugStdLib>False</DebugStdLib>
-    <InterpreterVersion>3.5</InterpreterVersion>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -22,6 +23,7 @@
     <WorkingDirectory>.</WorkingDirectory>
     <LaunchProvider>Web launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -102,6 +104,7 @@
     <Folder Include="wald\templates\admin\dictionary\DataUpdate\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="codemeta.json" />
     <Content Include="wald\dictionary\static\dictionary\content\bootstrap.css" />
     <Content Include="wald\dictionary\static\dictionary\content\bootstrap.min.css" />
     <Content Include="wald\dictionary\static\dictionary\content\dialectkaart-wald.jpg" />
@@ -182,17 +185,7 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="..\..\..\..\..\env\ewdict\">
-      <Id>{6b0385fe-25a6-449b-ae19-2b7ac70506af}</Id>
-      <BaseInterpreter>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</BaseInterpreter>
-      <Version>3.5</Version>
-      <Description>ewdict (Python 64-bit 3.5)</Description>
-      <InterpreterPath>Scripts\python.exe</InterpreterPath>
-      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
-      <LibraryPath>Lib\</LibraryPath>
-      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>Amd64</Architecture>
-    </Interpreter>
+    <InterpreterReference Include="MSBuild|ewdict39|D:\Data Files\vs2010\projects\RU-wnd\wld\wld.pyproj" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

@@ -4,10 +4,9 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>wld</Name>
     <RootNamespace>wld</RootNamespace>
-    <InterpreterId>MSBuild|{a7e65f8a-0cdf-4421-84a5-a957ce3872e5}|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|ewdict39|$(MSBuildProjectFullPath)</InterpreterId>
     <WebBrowserPort>6506</WebBrowserPort>
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
-    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -19,6 +18,7 @@
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
+    <DjangoSettingsModule>wld.settings</DjangoSettingsModule>
     <LaunchProvider>Web launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
@@ -71,19 +71,6 @@
     </Compile>
     <Compile Include="wld\mapview\views.py" />
     <Compile Include="wld\mapview\__init__.py" />
-    <Compile Include="wld\safelogging\admin.py" />
-    <Compile Include="wld\safelogging\allowed_hosts.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="wld\safelogging\apps.py" />
-    <Compile Include="wld\safelogging\migrations\__init__.py" />
-    <Compile Include="wld\safelogging\models.py" />
-    <Compile Include="wld\safelogging\settings.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="wld\safelogging\tests.py" />
-    <Compile Include="wld\safelogging\views.py" />
-    <Compile Include="wld\safelogging\__init__.py" />
     <Compile Include="wld\utils.py">
       <SubType>Code</SubType>
     </Compile>
@@ -104,6 +91,7 @@
     <Folder Include="wld\dictionary\static\dictionary\content\" />
     <Folder Include="wld\dictionary\static\dictionary\fonts\" />
     <Folder Include="wld\dictionary\static\dictionary\scripts\" />
+    <Folder Include="wld\dictionary\static\dictionary\webfonts\" />
     <Folder Include="wld\dictionary\templates\" />
     <Folder Include="wld\dictionary\templates\dictionary\" />
     <Folder Include="wld\mapview\" />
@@ -116,9 +104,6 @@
     <Folder Include="wld\mapview\static\mapview\webfonts\" />
     <Folder Include="wld\mapview\templates\" />
     <Folder Include="wld\mapview\templates\mapview\" />
-    <Folder Include="wld\safelogging\" />
-    <Folder Include="wld\safelogging\migrations\" />
-    <Folder Include="wld\safelogging\templates\" />
     <Folder Include="wld\templates\" />
     <Folder Include="wld\templates\admin\" />
     <Folder Include="wld\templates\admin\dictionary\" />
@@ -142,6 +127,21 @@
     <Content Include="wld\dictionary\static\dictionary\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="wld\dictionary\static\dictionary\scripts\diadict.js" />
     <Content Include="wld\dictionary\static\dictionary\scripts\gtrack.js" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-brands-400.eot" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-brands-400.svg" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-brands-400.ttf" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-brands-400.woff" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-brands-400.woff2" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-regular-400.eot" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-regular-400.svg" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-regular-400.ttf" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-regular-400.woff" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-regular-400.woff2" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-solid-900.eot" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-solid-900.svg" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-solid-900.ttf" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-solid-900.woff" />
+    <Content Include="wld\dictionary\static\dictionary\webfonts\fa-solid-900.woff2" />
     <Content Include="wld\dictionary\templates\dictionary\dialect_check.html" />
     <Content Include="wld\dictionary\templates\dictionary\guide.html" />
     <Content Include="wld\dictionary\templates\dictionary\import_test.html" />
@@ -180,7 +180,6 @@
     <Content Include="wld\mapview\static\mapview\webfonts\fa-solid-900.woff" />
     <Content Include="wld\mapview\static\mapview\webfonts\fa-solid-900.woff2" />
     <Content Include="wld\mapview\templates\mapview\map_view.html" />
-    <Content Include="wld\safelogging\templates\index.html" />
     <Content Include="wld\templates\admin\base.html" />
     <Content Include="wld\templates\admin\base_site.html" />
     <Content Include="wld\templates\admin\dictionary\Info\change_form.html" />
@@ -209,15 +208,14 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="..\..\..\..\..\env\ewdict\">
-      <Id>{a7e65f8a-0cdf-4421-84a5-a957ce3872e5}</Id>
-      <Version>3.5</Version>
-      <Description>ewdict (Python 64-bit 3.5)</Description>
+    <Interpreter Include="..\..\..\..\..\env\ewdict39\">
+      <Id>ewdict39</Id>
+      <Version>3.9</Version>
+      <Description>ewdict39 (Python 3.9 (64-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
-      <LibraryPath>Lib\</LibraryPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>Amd64</Architecture>
+      <Architecture>X64</Architecture>
     </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />

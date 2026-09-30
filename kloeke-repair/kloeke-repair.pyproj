@@ -12,7 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>kloeke-repair</Name>
     <RootNamespace>kloeke-repair</RootNamespace>
-    <InterpreterId>{e4bfa682-5e23-49cf-ac0f-48ab3a4b0792}</InterpreterId>
+    <InterpreterId>MSBuild|{e4bfa682-5e23-49cf-ac0f-48ab3a4b0792}|$(MSBuildProjectFullPath)</InterpreterId>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <CommandLineArguments>-i "D:\Data Files\TG\Dialecten\data\2019\WGD\WGD-Veluwe-mens-resorted-PART.xlsx" -o "D:\Data Files\TG\Dialecten\data\2019\WGD\WGD-PART-corr.xlsx"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>

@@ -12,7 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>diacorrect</Name>
     <RootNamespace>diacorrect</RootNamespace>
-    <InterpreterId>{cee766f8-213c-432e-ae52-0977c4fd4972}</InterpreterId>
+    <InterpreterId>MSBuild|{cee766f8-213c-432e-ae52-0977c4fd4972}|$(MSBuildProjectFullPath)</InterpreterId>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <CommandLineArguments>-w -i "D:/Data Files/TG/Dialecten/data/2021/WGD/erwin/WGD-Veluwe-mens-Erwin.xlsx" -o "D:/Data Files/TG/Dialecten/data/2021/WGD/erwin/WGD-Veluwe-mens-Erwin-out.xlsx"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
