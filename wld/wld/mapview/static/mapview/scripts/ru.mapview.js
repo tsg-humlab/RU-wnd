@@ -12,36 +12,47 @@ String.prototype.format = function () {
   return formatted;
 };
 
+(function ($) {
+  $(function () {
+    $(document).ready(function () {
+      // Initialize event listeners
+      ru.mapview.init_mapview();
+    });
+  });
+})(django.jQuery);
+
+
 
 var ru = (function ($, ru) {
   "use strict";
 
   ru.mapview = (function ($, config) {
     // Local variables for ru.mapview
-    const tileUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-        attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' +
-                      ' contributors &copy; <a href="https://carto.com/attribution">CARTO</a>',
-        tiles = L.tileLayer(tileUrl, { attribution }),
-        // Trial: for fontawesome *4*
-        fontAwesomeIcon = L.divIcon({
-          html: '<i class="fa fa-map-marker fa-alt" style="color: darkred;"></i>',
-          iconSize: [20, 20],
-          className: 'myDivIcon'
-        });
+    var tileUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png?key={}',
+      attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' +
+        ' contributors &copy; <a href="https://carto.com/attribution">CARTO</a>',
+      tiles = null,
+      // Trial: for fontawesome *4*
+      fontAwesomeIcon = L.divIcon({
+        html: '<i class="fa fa-map-marker fa-alt" style="color: darkred;"></i>',
+        iconSize: [20, 20],
+        className: 'myDivIcon'
+      });
     var main_map_object = null,   // Leaflet map object
-        loc_sWaiting = " <span class=\"glyphicon glyphicon-refresh glyphicon-refresh-animate\"></span>",
-        loc_oms = null,
-        loc_divErr = "diadict_err",
-        loc_layerDict = {},
-        loc_layerList = [],
-        loc_overlayMarkers = {},
-        loc_colorDict = {},
-        loc_trefwoord = [],
-        loc_colors = '#0fba62,#5aa5c4,black,#345beb,#e04eed,#ed4c72,#1e662a,#c92f04,#e39817'.split(',');
-    
+      loc_sWaiting = " <span class=\"glyphicon glyphicon-refresh glyphicon-refresh-animate\"></span>",
+      loc_oms = null,
+      loc_divErr = "diadict_err",
+      loc_cartoapi = "cb1_44ki_1_2d321adc999a7a180201a9d8",
+      loc_layerDict = {},
+      loc_layerList = [],
+      loc_overlayMarkers = {},
+      loc_colorDict = {},
+      loc_trefwoord = [],
+      loc_colors = '#0fba62,#5aa5c4,black,#345beb,#e04eed,#ed4c72,#1e662a,#c92f04,#e39817'.split(',');
+
     // Private methods specifiction
     var private_methods = {
-      errMsg: function(sMsg, ex) {
+      errMsg: function (sMsg, ex) {
         var sHtml = "";
         if (ex === undefined) {
           sHtml = "Error: " + sMsg;
@@ -52,7 +63,7 @@ var ru = (function ($, ru) {
         $("#" + loc_divErr).html(sHtml);
       },
 
-      errClear: function() {
+      errClear: function () {
         $("#" + loc_divErr).html("");
       },
 
@@ -62,7 +73,7 @@ var ru = (function ($, ru) {
        * @param {str}   name, representing category
        * @returns {bool}
        */
-      make_icon: function(name) {
+      make_icon: function (name) {
         var oBack = {};
 
         try {
@@ -80,7 +91,7 @@ var ru = (function ($, ru) {
         }
       },
 
- 
+
       /**
        * make_marker
        * 
@@ -89,10 +100,10 @@ var ru = (function ($, ru) {
        */
       make_marker: function (entry) {
         var point,    // Latitude, longitude array
-            trefwoord = "",
-            popup = "",
-            idx = -1,
-            marker;
+          trefwoord = "",
+          popup = "",
+          idx = -1,
+          marker;
 
         try {
           // Validate
@@ -131,8 +142,8 @@ var ru = (function ($, ru) {
 
       leaflet_scrollbars: function () {
         var layers_list = "section.leaflet-control-layers-list",
-            layers_scrollbar = "leaflet-control-layers-scrollbar",
-            height = 300;
+          layers_scrollbar = "leaflet-control-layers-scrollbar",
+          height = 300;
 
         try {
           //if ($(layers_list)[0].scrollHeight > height) {
@@ -154,6 +165,21 @@ var ru = (function ($, ru) {
     // Public methods
     return {
       /**
+       * init_mapview
+       */
+      init_mapview() {
+        try {
+          tileUrl = tileUrl.replace("{}", loc_cartoapi);
+          tiles = L.tileLayer(tileUrl, {
+            'attribution': attribution,
+            'referrerPolicy': 'strict-origin',
+          });
+        } catch (ex) {
+          private_methods.errMsg("init_mapview", ex);
+        }
+      },
+
+      /**
        * legend_click 
        *    Toggle 'minus' and 'plus' glyphicon, indicating whether the legend includes or excludes all items
        * 
@@ -162,8 +188,8 @@ var ru = (function ($, ru) {
        */
       legend_click(el) {
         var el_sign = null,
-            mod_cont = null,
-            lfl_sect = null;
+          mod_cont = null,
+          lfl_sect = null;
 
         try {
           mod_cont = $(el).closest(".modal-content");
@@ -209,22 +235,22 @@ var ru = (function ($, ru) {
        */
       lemma_map(el) {
         var frm = "#lemmasearch",
-            map_title = "#map_view_title",
-            map_id = "map_lemma",
-            map_view = "#map_view",
-            data = null,
-            entries = null,
-            lemma = "",
-            label = "",
-            point = null,
-            points = [],
-            keywords = [],
-            polyline = null,
-            oOverlay = null,
-            i = 0,
-            idx = 0,
-            targeturl = "",
-            targetid = "";
+          map_title = "#map_view_title",
+          map_id = "map_lemma",
+          map_view = "#map_view",
+          data = null,
+          entries = null,
+          lemma = "",
+          label = "",
+          point = null,
+          points = [],
+          keywords = [],
+          polyline = null,
+          oOverlay = null,
+          i = 0,
+          idx = 0,
+          targeturl = "",
+          targetid = "";
 
         try {
           // Get the form data
@@ -377,22 +403,22 @@ var ru = (function ($, ru) {
        */
       dialect_map(el) {
         var frm = "#dialectsearch",         // On dialect_list.html
-            map_title = "#map_view_title",  // Part of map_view.html
-            map_id = "map_lemma",           // Part of map_view.html
-            map_view = "#map_view",         // Part of map_view.html
-            data = null,
-            entries = null,
-            lemma = "",
-            label = "",
-            point = null,
-            points = [],
-            keywords = [],
-            polyline = null,
-            oOverlay = null,
-            i = 0,
-            idx = 0,
-            targeturl = "",
-            targetid = "";
+          map_title = "#map_view_title",  // Part of map_view.html
+          map_id = "map_lemma",           // Part of map_view.html
+          map_view = "#map_view",         // Part of map_view.html
+          data = null,
+          entries = null,
+          lemma = "",
+          label = "",
+          point = null,
+          points = [],
+          keywords = [],
+          polyline = null,
+          oOverlay = null,
+          i = 0,
+          idx = 0,
+          targeturl = "",
+          targetid = "";
 
         try {
           // Get the form data

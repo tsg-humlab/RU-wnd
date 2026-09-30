@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36915.13 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "diacorrect", "diacorrect\diacorrect.pyproj", "{E52B7C77-4DBB-4DCE-9082-948775BCA8ED}"
 EndProject
@@ -9,7 +9,7 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "fixscan", "fixscan\fixscan.
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "kloeke-repair", "kloeke-repair\kloeke-repair.pyproj", "{48362EF7-61D5-4815-85B6-BF8AB9F19036}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "wald", "wald\wald.pyproj", "{5CFDDD00-42D9-490F-842D-71CCE5D772DA}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "wald", "wald\wald.pyproj", "{57BEC585-8D5C-4B18-B655-7AF7D18C60D4}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "wbd", "wbd\wbd.pyproj", "{A6C3239A-BCAF-4905-97FF-9F3D22AA4223}"
 EndProject
@@ -51,6 +51,8 @@ Global
 		{B2D57CB1-040B-45A8-B6A7-B32699FC1114}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8C41500-A8FC-4016-9632-7DFD2488F638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8C41500-A8FC-4016-9632-7DFD2488F638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57BEC585-8D5C-4B18-B655-7AF7D18C60D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57BEC585-8D5C-4B18-B655-7AF7D18C60D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

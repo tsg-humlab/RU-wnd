@@ -12,16 +12,26 @@ String.prototype.format = function () {
   return formatted;
 };
 
+(function ($) {
+  $(function () {
+    $(document).ready(function () {
+      // Initialize event listeners
+      ru.mapview.init_mapview();
+    });
+  });
+})(django.jQuery);
+
+
 
 var ru = (function ($, ru) {
   "use strict";
 
   ru.mapview = (function ($, config) {
     // Local variables for ru.mapview
-    const tileUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+    var tileUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png?key={}',
         attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' +
                       ' contributors &copy; <a href="https://carto.com/attribution">CARTO</a>',
-        tiles = L.tileLayer(tileUrl, { attribution }),
+        tiles = null,
         // Trial: for fontawesome *4*
         fontAwesomeIcon = L.divIcon({
           html: '<i class="fa fa-map-marker fa-alt" style="color: darkred;"></i>',
@@ -32,6 +42,7 @@ var ru = (function ($, ru) {
         loc_sWaiting = " <span class=\"glyphicon glyphicon-refresh glyphicon-refresh-animate\"></span>",
         loc_oms = null,
         loc_divErr = "diadict_err",
+        loc_cartoapi = "cb1_44ki_1_2d321adc999a7a180201a9d8",
         loc_layerDict = {},
         loc_layerList = [],
         loc_overlayMarkers = {},
@@ -153,6 +164,21 @@ var ru = (function ($, ru) {
 
     // Public methods
     return {
+      /**
+       * init_mapview
+       */
+      init_mapview() {
+        try {
+          tileUrl = tileUrl.replace("{}", loc_cartoapi);
+          tiles = L.tileLayer(tileUrl, {
+            'attribution': attribution,
+            'referrerPolicy': 'strict-origin',
+          });
+        } catch (ex) {
+          private_methods.errMsg("init_mapview", ex);
+        }
+      },
+
       /**
        * legend_click 
        *    Toggle 'minus' and 'plus' glyphicon, indicating whether the legend includes or excludes all items

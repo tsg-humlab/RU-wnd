@@ -4,26 +4,23 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>wald</Name>
     <RootNamespace>wald</RootNamespace>
-    <InterpreterId>
-    </InterpreterId>
-    <PythonRunWebServerCommandArguments>runserver --settings $(DjangoSettingsModule) %SERVER_PORT% $(CommandLineArguments)</PythonRunWebServerCommandArguments>
+    <InterpreterId>MSBuild|ewdict39|$(MSBuildProjectFullPath)</InterpreterId>
     <WebBrowserPort>6506</WebBrowserPort>
-    <DebugStdLib>False</DebugStdLib>
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5cfddd00-42d9-490f-842d-71cce5d772da}</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
-    <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <ProjectGuid>{57bec585-8d5c-4b18-b655-7af7d18c60d4}</ProjectGuid>
+    <ProjectHome />
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <StartupFile>manage.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
+    <DjangoSettingsModule>wald.settings</DjangoSettingsModule>
     <LaunchProvider>Web launcher</LaunchProvider>
     <OutputPath>.</OutputPath>
-    <WebBrowserUrl>http://localhost</WebBrowserUrl>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -116,6 +113,8 @@
     <Content Include="wald\dictionary\static\dictionary\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="wald\dictionary\static\dictionary\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="wald\dictionary\static\dictionary\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="wald\dictionary\static\dictionary\scripts\bootstrap.js" />
+    <Content Include="wald\dictionary\static\dictionary\scripts\bootstrap.min.js" />
     <Content Include="wald\dictionary\static\dictionary\scripts\diadict.js" />
     <Content Include="wald\dictionary\static\dictionary\scripts\gtrack.js" />
     <Content Include="wald\dictionary\templates\dictionary\dialect_check.html" />
@@ -161,8 +160,6 @@
     <Content Include="wald\templates\admin\base_site.html" />
     <Content Include="wald\templates\admin\dictionary\DataUpdate\change_form.html" />
     <Content Include="wald\templates\admin\dictionary\Info\change_form.html" />
-    <Content Include="wald\dictionary\static\dictionary\scripts\bootstrap.js" />
-    <Content Include="wald\dictionary\static\dictionary\scripts\bootstrap.min.js" />
     <None Include="wald\dictionary\static\dictionary\scripts\jquery.validate-vsdoc.js" />
     <None Include="wald\dictionary\static\dictionary\scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="wald\dictionary\static\dictionary\scripts\jquery-1.10.2.js" />
@@ -185,7 +182,15 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <InterpreterReference Include="MSBuild|ewdict39|D:\Data Files\vs2010\projects\RU-wnd\wld\wld.pyproj" />
+    <Interpreter Include="..\..\..\..\..\env\ewdict39\">
+      <Id>ewdict39</Id>
+      <Version>3.9</Version>
+      <Description>ewdict39 (Python 3.9 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 
