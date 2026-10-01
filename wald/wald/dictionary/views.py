@@ -1640,10 +1640,10 @@ class LemmaListView(ListView):
             if '*' in val or '[' in val or '?' in val or '#' in val:
                 # val = adapt_search(get['dialectCity'])
                 val = adapt_search(val)
-                lstQ.append(Q(entry__dialect__stad__iregex=val))
+                lstQ.append(Q(lemma_entries__dialect__stad__iregex=val))
             else:
                 # Strive for equality, but disregard case
-                lstQ.append(Q(entry__dialect__stad__iexact=val))
+                lstQ.append(Q(lemma_entries__dialect__stad__iexact=val))
             bHasFilter = True
 
         # Check for dialect code (Kloeke)
@@ -1651,16 +1651,16 @@ class LemmaListView(ListView):
             val = get['dialectCode']
             if '*' in val or '[' in val or '?' in val or '#' in val:
                 val = adapt_search(val)
-                lstQ.append(Q(entry__dialect__nieuw__iregex=val))
+                lstQ.append(Q(lemma_entries__dialect__nieuw__iregex=val))
             else:
                 # Strive for equality, but disregard case
-                lstQ.append(Q(entry__dialect__nieuw__iexact=val))
+                lstQ.append(Q(lemma_entries__dialect__nieuw__iexact=val))
             bHasFilter = True
 
         # Check for dialect word, which is a direct member of Entry
         if 'woord' in get and get['woord'] != '':
             val = adapt_search(get['woord'])
-            lstQ.append(Q(entry__woord__iregex=val))
+            lstQ.append(Q(lemma_entries__woord__iregex=val))
             bHasFilter = True
 
         # Check for aflevering
@@ -1670,7 +1670,7 @@ class LemmaListView(ListView):
             if val.isdigit():
                 iVal = int(val)
                 if iVal>0:
-                    lstQ.append(Q(entry__aflevering__id=iVal))
+                    lstQ.append(Q(lemma_entries__aflevering__id=iVal))
                     bHasFilter = True
 
         # Check for mijn
@@ -1680,7 +1680,7 @@ class LemmaListView(ListView):
             if val.isdigit():
                 iVal = int(val)
                 if iVal>0:
-                    lstQ.append(Q(entry__mijnlijst__id=iVal))
+                    lstQ.append(Q(lemma_entries__mijnlijst__id=iVal))
                     bHasFilter = True
 
         # Method #8 -- use the lemma.toonbaar property
@@ -2412,7 +2412,7 @@ class DialectCheckView(ListView):
                         if not d.nieuw in lCode:
                             lCode.append({'nieuw': d.nieuw,'num': qse_count})
                         # Check all the afl for this dialect
-                        qsa = Aflevering.objects.filter(entry__in=qse).distinct()
+                        qsa = Aflevering.objects.filter(aflevering_entries__in=qse).distinct()
                         for a in qsa:
                             if not a.id in lAfl: lAfl.append(a.id)
                     # Sort the list of afl
@@ -2448,7 +2448,7 @@ class DialectCheckView(ListView):
                         if not d.stad in lStad:
                             lStad.append({'stad': d.stad,'num': qse_count})
                         # Check all the afl for this dialect
-                        qsa = Aflevering.objects.filter(entry__in=qse).distinct()
+                        qsa = Aflevering.objects.filter(aflevering_entries__in=qse).distinct()
                         for a in qsa:
                             if not a.id in lAfl: lAfl.append(a.id)
                     # Sort the list of afl

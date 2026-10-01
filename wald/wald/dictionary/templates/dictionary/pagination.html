@@ -1,6 +1,9 @@
-              <ul class='pagination pagination-sm'>
+              <ul class='pagination pagination-xsm'>
               {% if page_obj.has_previous %}
-                  <li><a href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value|urlencode }}{% endifnotequal %}{% endfor %}">&laquo;</a></li>
+                  <li><a href="?page={{ page_obj.previous_page_number }}
+                         {% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;</a>
+                  </li>
+                  <li><a href="?page=1">1</a></li>
               {% endif %}
           
                 {% if  page_obj.number > 10 %}
@@ -9,23 +12,25 @@
 
                 {% for p in page_obj.paginator.page_range %}
           
-                   {% if p < page_obj.number|add:"10" and  p > page_obj.number|add:"-10" %}
-                   <li {% ifequal p page_obj.number %}class='active'{% endifequal %}>
-                   <a href='?page={{ p }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value|urlencode }}{% endifnotequal %}{% endfor %}'>{% ifequal p 0 %}Start{% else %}{{p}}{% endifequal %}</a>
-                   </li>
-                   {% endif %}
+                  {% if not page_obj.has_previous or p != 1 %}
+                    {% if p < page_obj.number|add:"10" and  p > page_obj.number|add:"-10" %}
+                    <li {% if p == page_obj.number %}class='active'{% endif %}>
+                    <a href='?page={{ p }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}'>{% if p == 0 %}Start{% else %}{{p}}{% endif %}</a>
+                    </li>
+                    {% endif %}
+                  {% endif %}
          
                 {% endfor %}
   
                 {% if page_obj.paginator.num_pages > page_obj.number|add:"10" %}
                   <li><a>...</a></li>
                   <li>
-                  <a href='?page={{ page_obj.paginator.num_pages }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value|urlencode }}{% endifnotequal %}{% endfor %}'>{{page_obj.paginator.num_pages}}</a>
+                  <a href='?page={{ page_obj.paginator.num_pages }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}'>{{page_obj.paginator.num_pages}}</a>
                   </li>
                 {% endif %}
       
               {% if page_obj.has_next %}
-                  <li><a href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value|urlencode }}{% endifnotequal %}{% endfor %}">&raquo;</a></li>
+                  <li><a href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&raquo;</a></li>
               {% endif %}
 
             

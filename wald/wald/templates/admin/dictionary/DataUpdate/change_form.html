@@ -2,17 +2,18 @@
 {% load i18n admin_urls %}
 {% block after_related_objects %}
 
-{% if original %}
 <div class="row">
   <div class="col-md-3">
-    <span><a id="info_button" class="btn btn-primary" 
-       import-start="{% url 'import_update_start' pk=original.id %}" 
-       import-progress="{% url 'import_update_progress' pk=original.id %}" 
-       onclick="import_start(true)">Start updating</a>
-    </span>
-    <span><a id="info_button3" class="btn btn-primary"
-             onclick="progress_request()">Check progress</a>
-    </span>
+    {% if original.id %}
+      <span><a id="info_button" class="btn btn-primary" 
+         import-start="{% url 'import_update_start' pk=original.id %}" 
+         import-progress="{% url 'import_update_progress' pk=original.id %}" 
+         onclick="import_start(true)">Start updating</a>
+      </span>
+      <span><a id="info_button3" class="btn btn-primary"
+               onclick="progress_request()">Check progress</a>
+      </span>
+    {% endif %}
   </div>
   <div id="info_progress" class="col-md-9">
       <!-- This is where the progress will be reported -->
@@ -21,5 +22,4 @@
         <!-- Any possible errors will appear here-->
     </div>
 </div>
-{% endif %}
 {% endblock %}

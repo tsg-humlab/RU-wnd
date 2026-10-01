@@ -7,6 +7,12 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    padding-top: 15px;
+}
+
+.jumbotron {
+    padding-top: 40px;
+    padding-bottom: 30px;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
@@ -317,5 +323,19 @@ body > div > footer a {
   color: lightgreen;
   position: relative;
   z-index: 1000;
+}
+
+.suggestion {
+    border: 1px solid darkgray;
+    color: darkblue;
+    background-color: lightcyan;
+    padding: 5px;
+  border-radius: 3px 4px;
+  margin: 2px 2px 2px 2px;
+}
+
+.sent-error {
+    background-color: lightgoldenrodyellow;
+    color: darkred;
 }
 

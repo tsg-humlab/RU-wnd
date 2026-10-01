@@ -79,10 +79,12 @@
     <Folder Include="wald\dictionary\fixtures\" />
     <Folder Include="wald\dictionary\fixtures\management\" />
     <Folder Include="wald\dictionary\static\" />
+    <Folder Include="wald\dictionary\static\admin\css\" />
     <Folder Include="wald\dictionary\static\dictionary\" />
     <Folder Include="wald\dictionary\static\dictionary\content\" />
     <Folder Include="wald\dictionary\static\dictionary\fonts\" />
     <Folder Include="wald\dictionary\static\dictionary\scripts\" />
+    <Folder Include="wald\dictionary\static\admin\" />
     <Folder Include="wald\dictionary\templates\" />
     <Folder Include="wald\dictionary\templates\dictionary\" />
     <Folder Include="wald\mapview\" />
@@ -102,6 +104,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="codemeta.json" />
+    <Content Include="wald\dictionary\static\admin\css\autocomplete.css" />
+    <Content Include="wald\dictionary\static\admin\css\base.css" />
+    <Content Include="wald\dictionary\static\admin\css\changelists.css" />
+    <Content Include="wald\dictionary\static\admin\css\dashboard.css" />
+    <Content Include="wald\dictionary\static\admin\css\fonts.css" />
+    <Content Include="wald\dictionary\static\admin\css\forms.css" />
+    <Content Include="wald\dictionary\static\admin\css\login.css" />
+    <Content Include="wald\dictionary\static\admin\css\responsive.css" />
+    <Content Include="wald\dictionary\static\admin\css\responsive_rtl.css" />
+    <Content Include="wald\dictionary\static\admin\css\rtl.css" />
+    <Content Include="wald\dictionary\static\admin\css\widgets.css" />
     <Content Include="wald\dictionary\static\dictionary\content\bootstrap.css" />
     <Content Include="wald\dictionary\static\dictionary\content\bootstrap.min.css" />
     <Content Include="wald\dictionary\static\dictionary\content\dialectkaart-wald.jpg" />

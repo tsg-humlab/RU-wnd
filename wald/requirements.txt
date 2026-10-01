@@ -2,7 +2,7 @@
 # For Ubuntu 20 and Python 3.5-3.8
 # ========================================
 
-django==2.2.24
+django== 4.2.30         # Used to be: 2.2.24
 openpyxl==2.6.4
 tablib==0.11.2
 

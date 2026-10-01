@@ -137,7 +137,7 @@
                 <span class="lemma-word-dialect-code">{{dialect.nieuw}} - </span>
                 <!-- See: https://docs.djangoproject.com/en/dev/ref/templates/builtins/?from=olddocs#regroup -->
                 <!-- Take all the [entry] elements for this dialect and divide them over their [lemma] -->
-                {% regroup dialect.entry_set.all|dictsort:"get_lemma_gloss" by lemma as lemma_list %}
+                {% regroup dialect.dialect_entries.all|dictsort:"get_lemma_gloss" by lemma as lemma_list %}
                 {% for lem in lemma_list %}
                   <span class="lemma-name"><a href="{% url 'lemmasearch' %}?search={{lem.grouper|urlencode}}">{{lem.grouper}}</a>:</span>
                   <!-- Take all the [trefwoord] elements available per [lemma] -->
@@ -171,7 +171,7 @@
                 {% endfor %}
               </td>
               <td>
-                {% regroup dialect.entry_set.all|dictsort:"get_aflevering" by aflevering as afl_list  %}
+                {% regroup dialect.dialect_entries.all|dictsort:"get_aflevering" by aflevering as afl_list  %}
                 {% spaceless %}
                 {% for afl in afl_list %}
                   <span class="lemma-aflevering"><a href="/{{app_prefix}}static/dictionary/content/pdf/{{afl.grouper.get_pdf}}">{{afl.grouper.get_summary}}</a></span>

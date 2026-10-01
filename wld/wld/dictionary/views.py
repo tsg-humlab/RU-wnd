@@ -2439,7 +2439,7 @@ class DialectCheckView(ListView):
                             if not d.nieuw in lCode:
                                 lCode.append({'nieuw': d.nieuw,'num': qse_count})
                             # Check all the afl for this dialect
-                            qsa = Aflevering.objects.filter(entry__in=qse).distinct()
+                            qsa = Aflevering.objects.filter(aflevering_entries__in=qse).distinct()
                             for a in qsa:
                                 if not a.id in lAfl: lAfl.append(a.id)
                         # Sort the list of afl
@@ -2475,7 +2475,7 @@ class DialectCheckView(ListView):
                             if not d.stad in lStad:
                                 lStad.append({'stad': d.stad,'num': qse_count})
                             # Check all the afl for this dialect
-                            qsa = Aflevering.objects.filter(entry__in=qse).distinct()
+                            qsa = Aflevering.objects.filter(aflevering_entries__in=qse).distinct()
                             for a in qsa:
                                 if not a.id in lAfl: lAfl.append(a.id)
                         # Sort the list of afl

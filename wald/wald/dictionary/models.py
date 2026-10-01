@@ -772,7 +772,8 @@ class Dialect(models.Model):
 
         with transaction.atomic():
             for obj in Dialect.objects.all():
-                if obj.entry_set.count() == 0:
+                if obj.dialect_entries.count() == 0:
+                # OLD: if obj.entry_set.count() == 0:
                     obj.toonbaar = False
                     obj.save()
         return True
@@ -2115,8 +2116,11 @@ def xml_update(xml_file, status_id, dataupdate_id, bUseDbase=False, bUseOld=Fals
 
                             # Remove anything *under* this lemma: all entries and related trefwoord, description
                             # lemma_this.lemma_entries.all().delete()
-                            lemma_this.entry_set.all().delete()
-
+                            # Do it this way, so as to allow cascading deletion
+                            for entry in lemma_this.lemma_entries.all():
+                                entry.delete()
+                            # lemma_this.entry_set.all().delete()
+                            
                         # Find out which lemma-description this is
                         sToelichting = ""
                         for comment in senselemma.findall('contextcomment'):

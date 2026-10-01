@@ -61,6 +61,7 @@ SECRET_KEY = '485c409a-daf7-47d3-81af-257049728c58'
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'e-wald.science.ru.nl',
                  'e-wald.nl', 'www.e-wald.nl']
+CSRF_TRUSTED_ORIGINS = ['https://e-wald.nl']
 
 
 # Application definition
