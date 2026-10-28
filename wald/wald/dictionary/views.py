@@ -419,28 +419,36 @@ def export_html(qs, sFileName):
 
 def do_repair_start(request):
     """Start up the repair action"""
-    sRepairType = request.GET.get('repairtype', '')
 
-    # Formulate a response
-    data = {'status': 'done'}
+    # Initial data
+    data = {'status': 'no access'}
+    # Access restrictions - see issue #57
+    user = request.user
+    if user and user.is_authenticated:
+        # Any authenticated user may do this
 
-    # Remove any previous repair objects of this type
-    Repair.objects.filter(repairtype=sRepairType).delete()
-    # Retrieve the Repair object with the correct type
-    oRepair = Repair(repairtype=sRepairType)
-    oRepair.save()
-    if sRepairType == "lemma":
-        bResult = do_repair_lemma(oRepair)
-        if not bResult:
-            data['status'] = "error"
-    elif sRepairType == "entrydescr":
-        bResult = do_repair_entrydescr(oRepair)
-        if not bResult:
-            data['status'] = "error"
-    elif sRepairType == "clean":
-        bResult = do_repair_clean(oRepair)
-        if not bResult:
-            data['status'] = "error"
+        sRepairType = request.GET.get('repairtype', '')
+
+        # Formulate a response
+        data['status'] = "done"
+
+        # Remove any previous repair objects of this type
+        Repair.objects.filter(repairtype=sRepairType).delete()
+        # Retrieve the Repair object with the correct type
+        oRepair = Repair(repairtype=sRepairType)
+        oRepair.save()
+        if sRepairType == "lemma":
+            bResult = do_repair_lemma(oRepair)
+            if not bResult:
+                data['status'] = "error"
+        elif sRepairType == "entrydescr":
+            bResult = do_repair_entrydescr(oRepair)
+            if not bResult:
+                data['status'] = "error"
+        elif sRepairType == "clean":
+            bResult = do_repair_clean(oRepair)
+            if not bResult:
+                data['status'] = "error"
 
     # Return this response
     return JsonResponse(data)
@@ -451,14 +459,20 @@ def do_repair_progress(request):
     sRepairType = request.GET.get('repairtype', '')
 
     # Formulate a response
-    data = {'status': 'not found'}
+    data = {'status': 'no access'}
 
     try:
-        # Get the repair object
-        qs = Repair.objects.filter(repairtype=sRepairType)
-        if qs != None and len(qs) > 0:
-            oRepair = qs[0]
-            data['status'] = oRepair.status
+        # Access restrictions - see issue #57
+        user = request.user
+        if user and user.is_authenticated:
+            # Any authenticated user may do this
+            data['status'] = "not found"
+
+            # Get the repair object
+            qs = Repair.objects.filter(repairtype=sRepairType)
+            if qs != None and len(qs) > 0:
+                oRepair = qs[0]
+                data['status'] = oRepair.status
     except:
         data['status'] = 'skipping a beat (repair_progress)'
 
