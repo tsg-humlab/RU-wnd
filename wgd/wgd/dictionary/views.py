@@ -490,48 +490,55 @@ def import_csv_start(request):
     oErr = ErrHandle()
 
     try:
-        # x = request.POST
-        iDeel = request.GET.get('deel', 1)
-        iSectie = request.GET.get('sectie', None)
-        iAflnum = request.GET.get('aflnum', 1)
-        sFile = request.GET.get('filename', '')
+        # Access restrictions - see issue #57
+        user = request.user
+        if user and user.is_authenticated:
+            # Any authenticated user may do this
 
-        bUseDbase = request.GET.get('usedbase', False)
-        if bUseDbase:
-            if bUseDbase == "true":
-                bUseDbase = True
+            # x = request.POST
+            iDeel = request.GET.get('deel', 1)
+            iSectie = request.GET.get('sectie', None)
+            iAflnum = request.GET.get('aflnum', 1)
+            sFile = request.GET.get('filename', '')
+
+            bUseDbase = request.GET.get('usedbase', False)
+            if bUseDbase:
+                if bUseDbase == "true":
+                    bUseDbase = True
+                else:
+                    bUseDbase = False
+
+            # Get the id of the Info object
+            if iSectie==None or iSectie == "":
+                info = Info.objects.filter(deel=iDeel, aflnum=iAflnum).first()
             else:
-                bUseDbase = False
+                info = Info.objects.filter(deel=iDeel, sectie=iSectie, aflnum=iAflnum).first()
 
-        # Get the id of the Info object
-        if iSectie==None or iSectie == "":
-            info = Info.objects.filter(deel=iDeel, aflnum=iAflnum).first()
+            if info == None:
+                data['status'] = 'error: no Info object found'
+                return JsonResponse(data)
+
+            # Remove any previous status objects for this info
+            Status.objects.filter(info=info).delete()
+
+            # Create a new import-status object
+            oStatus = Status(info=info)
+
+            # Note that we are starting
+            oStatus.set_status("starting")
+            iStatus = oStatus.id
+            # oCsvImport['status'] = "starting"
+
+            # Call the process
+            # WGD: use EXCEL_to_fixture instead of CSV_to_fixture
+            oResult = excel_to_fixture(sFile, iDeel, iSectie, iAflnum, iStatus, bUseDbase = bUseDbase, bUseOld = True)
+            if oResult == None or oResult['result'] == False:
+                data['status'] = 'error'
+
+            # WSince we are done: explicitly set the status so
+            oStatus.set_status("done")
         else:
-            info = Info.objects.filter(deel=iDeel, sectie=iSectie, aflnum=iAflnum).first()
-
-        if info == None:
-            data['status'] = 'error: no Info object found'
-            return JsonResponse(data)
-
-        # Remove any previous status objects for this info
-        Status.objects.filter(info=info).delete()
-
-        # Create a new import-status object
-        oStatus = Status(info=info)
-
-        # Note that we are starting
-        oStatus.set_status("starting")
-        iStatus = oStatus.id
-        # oCsvImport['status'] = "starting"
-
-        # Call the process
-        # WGD: use EXCEL_to_fixture instead of CSV_to_fixture
-        oResult = excel_to_fixture(sFile, iDeel, iSectie, iAflnum, iStatus, bUseDbase = bUseDbase, bUseOld = True)
-        if oResult == None or oResult['result'] == False:
-            data['status'] = 'error'
-
-        # WSince we are done: explicitly set the status so
-        oStatus.set_status("done")
+            data['status'] = "no access"
     except Exception as ex:
         oErr.DoError("import_csv_start error")
         data['status'] = "error"
@@ -544,39 +551,46 @@ def import_csv_progress(request):
     # Prepare a return object
     data = {'read':0, 'skipped':0, 'method': '(unknown)', 'msg': ''}
     try:
-        # Debugging
-        oErr.Status("import_csv_progress at {}".format(datetime.now()))
+        # Access restrictions - see issue #57
+        user = request.user
+        if user and user.is_authenticated:
+            # Any authenticated user may do this
 
-        if request.POST:
-            qd = request.POST
-        else:
-            qd = request.GET
-        iDeel = qd.get('deel', 1)
-        iSectie = qd.get('sectie', None)
-        iAflnum = qd.get('aflnum', 1)
-        # Get the id of the Info object
-        if iSectie==None or iSectie == "":
-            info = Info.objects.filter(deel=iDeel, aflnum=iAflnum).first()
-        else:
-            info = Info.objects.filter(deel=iDeel, sectie=iSectie, aflnum=iAflnum).first()
-        # Find out how far importing is going
-        qs = Status.objects.filter(info=info)
-        if qs != None and len(qs) > 0:
-            oStatus = qs[0]
-            # Fill in the return object
-            data['read'] = oStatus.read
-            data['skipped'] = oStatus.skipped
-            data['method'] = oStatus.method
-            data['status'] = oStatus.status
-            # Checking...
-            if data['status'] == "idle":
-                data['msg'] = "Idle status in import_csv_progress"
-        else:
-            # Do we have an INFO object?
-            if info == None:
-                data['status'] = "Please supply [deel], [sectie] and [aflnum]"
+            # Debugging
+            oErr.Status("import_csv_progress at {}".format(datetime.now()))
+
+            if request.POST:
+                qd = request.POST
             else:
-                data['status'] = "No status object for info=" + str(info.id) + " has been created yet"
+                qd = request.GET
+            iDeel = qd.get('deel', 1)
+            iSectie = qd.get('sectie', None)
+            iAflnum = qd.get('aflnum', 1)
+            # Get the id of the Info object
+            if iSectie==None or iSectie == "":
+                info = Info.objects.filter(deel=iDeel, aflnum=iAflnum).first()
+            else:
+                info = Info.objects.filter(deel=iDeel, sectie=iSectie, aflnum=iAflnum).first()
+            # Find out how far importing is going
+            qs = Status.objects.filter(info=info)
+            if qs != None and len(qs) > 0:
+                oStatus = qs[0]
+                # Fill in the return object
+                data['read'] = oStatus.read
+                data['skipped'] = oStatus.skipped
+                data['method'] = oStatus.method
+                data['status'] = oStatus.status
+                # Checking...
+                if data['status'] == "idle":
+                    data['msg'] = "Idle status in import_csv_progress"
+            else:
+                # Do we have an INFO object?
+                if info == None:
+                    data['status'] = "Please supply [deel], [sectie] and [aflnum]"
+                else:
+                    data['status'] = "No status object for info=" + str(info.id) + " has been created yet"
+        else:
+            data['msg'] = "no access"
     except Exception as ex:
         oErr.DoError("import_csv_progress error")
         data['status'] = "error"
