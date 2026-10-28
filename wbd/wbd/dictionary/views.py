@@ -308,6 +308,22 @@ def export_html(qs, sFileName):
      
     return response
 
+def may_import(request):
+    """Check if import may proceed"""
+
+    oErr = ErrHandle()
+    bResult = False
+    try:
+        # Access restrictions - see issue #57
+        user = request.user
+        if user and user.is_authenticated:
+            # Any authenticated user may do this
+            bResult = True
+    except:
+        msg = oErr.get_error_message()
+        oErr.DoError("may_import")
+    return bResult
+
 def do_repair_start(request):
     """Start up the repair action"""
 

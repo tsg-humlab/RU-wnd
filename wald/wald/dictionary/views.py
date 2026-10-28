@@ -417,6 +417,22 @@ def export_html(qs, sFileName):
      
     return response
 
+def may_import(request):
+    """Check if import may proceed"""
+
+    oErr = ErrHandle()
+    bResult = False
+    try:
+        # Access restrictions - see issue #57
+        user = request.user
+        if user and user.is_authenticated:
+            # Any authenticated user may do this
+            bResult = True
+    except:
+        msg = oErr.get_error_message()
+        oErr.DoError("may_import")
+    return bResult
+
 def do_repair_start(request):
     """Start up the repair action"""
 
@@ -601,44 +617,47 @@ def import_update_start(request, pk):
     oErr = ErrHandle()
 
     try:
-        sFile = request.GET.get('filename', '')
-
-        bUseDbase = request.GET.get('usedbase', False)
-        if bUseDbase:
-            if bUseDbase == "true":
-                bUseDbase = True
-            else:
-                bUseDbase = False
-
-        # Get the id of the DataUpdate object
-        dataupdate = DataUpdate.objects.filter(id=pk).first()
-
-        if dataupdate == None:
-            data['status'] = 'error: no DataUpdate object found'
-            return JsonResponse(data)
-
-        # Remove any previous status objects for this info
-        StatusUpdate.objects.filter(dataupdate=dataupdate).delete()
-
-        # Create a new import-status object
-        oStatus = StatusUpdate.objects.create(dataupdate=dataupdate)
-
-        # Note that we are starting
-        oStatus.set_status("starting")
-
-        # Call the process - depending on the file ending
-        if ".xml" in sFile:
-            oResult = xml_update(sFile, oStatus.id, dataupdate.id, bUseDbase = bUseDbase, bUseOld = True)
+        if not may_import():
+            data['status'] = "no access"
         else:
-            # *NOT implemented* yet for CSV
-            # oResult = csv_to_fixture(sFile, iDeel, iSectie, iAflnum, iStatus, bUseDbase = bUseDbase, bUseOld = True)
-            pass
+            sFile = request.GET.get('filename', '')
 
-        if oResult == None or oResult['result'] == False:
-            data['status'] = 'error'
+            bUseDbase = request.GET.get('usedbase', False)
+            if bUseDbase:
+                if bUseDbase == "true":
+                    bUseDbase = True
+                else:
+                    bUseDbase = False
 
-        # WSince we are done: explicitly set the status so
-        oStatus.set_status("done")
+            # Get the id of the DataUpdate object
+            dataupdate = DataUpdate.objects.filter(id=pk).first()
+
+            if dataupdate == None:
+                data['status'] = 'error: no DataUpdate object found'
+                return JsonResponse(data)
+
+            # Remove any previous status objects for this info
+            StatusUpdate.objects.filter(dataupdate=dataupdate).delete()
+
+            # Create a new import-status object
+            oStatus = StatusUpdate.objects.create(dataupdate=dataupdate)
+
+            # Note that we are starting
+            oStatus.set_status("starting")
+
+            # Call the process - depending on the file ending
+            if ".xml" in sFile:
+                oResult = xml_update(sFile, oStatus.id, dataupdate.id, bUseDbase = bUseDbase, bUseOld = True)
+            else:
+                # *NOT implemented* yet for CSV
+                # oResult = csv_to_fixture(sFile, iDeel, iSectie, iAflnum, iStatus, bUseDbase = bUseDbase, bUseOld = True)
+                pass
+
+            if oResult == None or oResult['result'] == False:
+                data['status'] = 'error'
+
+            # WSince we are done: explicitly set the status so
+            oStatus.set_status("done")
     except Exception as ex:
         oErr.DoError("import_update_start error")
         data['status'] = "error"
@@ -651,30 +670,33 @@ def import_update_progress(request, pk):
     # Prepare a return object
     data = {'read':0, 'skipped':0, 'method': '(unknown)', 'msg': ''}
     try:
-        # Debugging
-        oErr.Status("import_update_progress at {}".format(datetime.now()))
-
-        qd = request.POST if request.POST else request.GET
-        # Get the DataUpdate object
-        dataupdate = DataUpdate.objects.filter(id=pk).first()
-        # Find out how far importing is going
-        qs = StatusUpdate.objects.filter(dataupdate=dataupdate)
-        if qs != None and len(qs) > 0:
-            oStatus = qs[0]
-            # Fill in the return object
-            data['read'] = oStatus.read
-            data['skipped'] = oStatus.skipped
-            data['method'] = oStatus.method
-            data['status'] = oStatus.status
-            # Checking...
-            if data['status'] == "idle":
-                data['msg'] = "Idle status in import_update_progress"
+        if not may_import():
+            data['msg'] = "no access"
         else:
-            # Do we have an INFO object?
-            if dataupdate == None:
-                data['status'] = "Cannot find DataUpdate with id={}".format(pk)
+            # Debugging
+            oErr.Status("import_update_progress at {}".format(datetime.now()))
+
+            qd = request.POST if request.POST else request.GET
+            # Get the DataUpdate object
+            dataupdate = DataUpdate.objects.filter(id=pk).first()
+            # Find out how far importing is going
+            qs = StatusUpdate.objects.filter(dataupdate=dataupdate)
+            if qs != None and len(qs) > 0:
+                oStatus = qs[0]
+                # Fill in the return object
+                data['read'] = oStatus.read
+                data['skipped'] = oStatus.skipped
+                data['method'] = oStatus.method
+                data['status'] = oStatus.status
+                # Checking...
+                if data['status'] == "idle":
+                    data['msg'] = "Idle status in import_update_progress"
             else:
-                data['status'] = "No status object for dataupdate=" + str(dataupdate.id) + " has been created yet"
+                # Do we have an INFO object?
+                if dataupdate == None:
+                    data['status'] = "Cannot find DataUpdate with id={}".format(pk)
+                else:
+                    data['status'] = "No status object for dataupdate=" + str(dataupdate.id) + " has been created yet"
     except Exception as ex:
         oErr.DoError("import_update_progress error")
         data['status'] = "error"
